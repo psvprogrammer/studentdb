@@ -1,0 +1,5 @@
+# local setting file
+settings_local.py
+
+# PyCharm ide files
+.idea/
