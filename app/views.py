@@ -4,7 +4,7 @@ Definition of views.
 """
 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest
 from django.views.generic import View, ListView
 from app.models import Student, StudentGroup, StudentGroupDistribution, \
     GroupLead
@@ -14,9 +14,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
 from django_ajax.decorators import ajax
-from django.conf import settings
 
-from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -356,22 +354,14 @@ class AddStudent(View):
 
     def get(self, request):
 
-        # student_data = get_object_or_404(Student, id=student_id)
-        # user_data = get_object_or_404(User, id=student_data.user_id)
-
         form = self.form()
 
         context = {
             'form': form,
-            # 'student': student_data,
-            # 'email': user_data.username,
         }
         return render(request, self.template_name, context)
 
     def post(self, request):
-
-        # student_data = get_object_or_404(Student, id=student_id)
-        # user_data = get_object_or_404(User, id=student_data.user_id)
 
         form = self.form(request.POST)
         user_form = self.user_form(request.POST)
@@ -388,8 +378,6 @@ class AddStudent(View):
             context = {
                 'form': form,
                 'user_form': user_form,
-                # 'student': new_student,
-                # 'email': new_user.username,
             }
             return render(request, self.template_name, context)
 

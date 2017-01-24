@@ -1,10 +1,8 @@
 """
 Definition of models.
 """
-from datetime import datetime
 from django.contrib.auth.models import User
 from django.db import models
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -35,11 +33,6 @@ class Student(models.Model):
                                help_text='enter your student id number',
                                max_length=16, blank=True,
                                default='', unique=True)
-    # group = models.ForeignKey('StudentGroup',
-    #                           verbose_name='Group',
-    #                           help_text='choose the group of the student',
-    #                           blank=True, null=True,
-    #                           on_delete=models.SET_NULL)
 
     def get_full_name(self):
         return ' '.join([self.last_name,
