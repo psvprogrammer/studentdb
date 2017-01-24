@@ -1,0 +1,15 @@
+<tr id="student_{{ student.id }}_tr">
+    <td><a href="{% url 'student' student.id %}">
+        {{ student.get_full_instance_name }}
+    </a></td>
+    <td>{{ student.stud_id }}</td>
+    <td>{{ student.bdate|date:"Y-m-d" }}</td>
+    {% if request.user.is_superuser %}
+    <td>
+        <button onclick="exclude_student({{ student.id }})"
+                type="button" class="btn btn-danger">
+            Exclude
+        </button>
+    </td>
+    {% endif %}
+</tr>

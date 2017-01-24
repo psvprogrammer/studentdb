@@ -1,0 +1,57 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="jumbotron text-center">
+    <h1>List of all students</h1>
+    <hr/>
+</div>
+
+<div class="col-md-10 col-md-offset-1">
+{#    <h3>All students list</h3>#}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Student (email)</th>
+            <th>Id</th>
+            <th>Birthday</th>
+            {% if request.user.is_superuser %}
+            <th>&nbsp;</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for student in object_list %}
+            {% include 'app/all_students_table_row.html' %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'app/scripts/jquery-1.10.2.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'django_ajax/js/jquery.ajax.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'django_ajax/js/jquery.ajax-plugin.min.js' %}">
+    </script>
+
+    <script type="text/javascript">
+
+        function del_student(student_id) {
+            ajaxPost({% url 'del_student' %},
+                {
+                    'student_id': student_id,
+                },
+                function (content) {
+                /*on success*/
+                }
+            )
+        }
+
+    </script>
+
+{% endblock %}

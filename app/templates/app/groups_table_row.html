@@ -1,0 +1,12 @@
+<tr id="group_{{ group.id }}_tr">
+    <td><a href="{% url 'group' group.id %}">{{ group.name }}</a></td>
+    <td>{{ group.get_len }}</td>
+    <td>{{ group.get_leader }}</td>
+    {% if request.user.is_superuser %}
+    <td>
+        <button type="button" class="btn btn-danger"
+                onclick="delete_group({{ group.id }})">Delete
+        </button>
+    </td>
+    {% endif %}
+</tr>

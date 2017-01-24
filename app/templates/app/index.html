@@ -1,0 +1,27 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<div class="jumbotron text-center">
+    <h1>Вітаємо</h1>
+    <hr/>
+    <p class="lead">
+        У системі, що дозволяє керувати
+        <br/>
+        базою даних студентів
+    </p>
+
+{% if not user.is_authenticated %}
+    <p>
+        <h4>Залогуйтеся, будь ласка, щоб розпочати роботу в системі</h4>
+    </p>
+    <hr/>
+    <p><a href="{% url 'login' %}" class="btn btn-primary
+    btn-large">Увійти &raquo;
+    </a></p>
+{% endif %}
+
+    <hr/>
+</div>
+
+{% endblock %}

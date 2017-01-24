@@ -1,0 +1,169 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="jumbotron text-center">
+    <h3>Group</h3>
+    <hr/>
+    <h1 id="group_name">{{ group.name }}</h1>
+    <h3 id="group_leader">{{ group.get_leader }}</h3>
+    <hr/>
+</div>
+
+{% if user.is_superuser %}
+<div class="col-md-6 col-md-offset-3 text-center">
+    <hr/>
+    <h3>Rename group</h3>
+    <form class="form-inline" onsubmit="return rename_group();">
+
+        <div class="form-group">
+            <label for="id_group_name">New group name</label>
+            <input type="text" class="form-control" name="name"
+                   value="{{ group.name }}"
+                   id="id_group_name" placeholder="enter new group name">
+        </div>
+
+        <button type="button" class="btn btn-primary"
+                onclick="rename_group()">Rename
+        </button>
+
+    </form>
+    <hr/>
+
+    <h3>Assign new group leader</h3>
+    <form class="form-inline" onsubmit="return assign_leader();">
+
+        <div class="form-group">
+            <label for="id_group_leader">New group leader</label>
+            <select id="id_group_leader" class="form-control"
+                    name="leader">
+                {% for student in students %}
+                    <option {% if student.id == group.get_leader.id %} selected
+                            {% endif %} value="{{ student.id }}">
+                        {{ student.get_full_instance_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="button" class="btn btn-primary"
+                onclick="assign_leader()">Assign
+        </button>
+
+    </form>
+    <hr/>
+</div>
+{% endif %}
+
+<div class="col-md-10 col-md-offset-1">
+    <h3>Students of the group</h3>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Student (email)</th>
+            <th>Id</th>
+            <th>Birthday</th>
+            {% if request.user.is_superuser %}
+            <th>&nbsp;</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody id="student_list_table">
+        {% for student in students %}
+            {% include 'app/student_table_row.html' %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if user.is_superuser %}
+<div class="col-md-6 col-md-offset-3 text-center">
+    <hr/>
+    <h3>Add student to group</h3>
+    <form class="form-inline" onsubmit="return distribute_student();">
+
+        <div class="form-group">
+            <label for="id_distr_student">Add student</label>
+            <select id="id_distr_student" class="form-control"
+                    name="new_student_id">
+                {% for student in all_students %}
+                    <option value="{{ student.id }}">
+                        {{ student.get_full_instance_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="button" class="btn btn-primary"
+                onclick="distribute_student()">Add
+        </button>
+
+    </form>
+    <hr/>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'app/scripts/jquery-1.10.2.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'django_ajax/js/jquery.ajax.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'django_ajax/js/jquery.ajax-plugin.min.js' %}">
+    </script>
+
+    <script type="text/javascript">
+        function rename_group() {
+            ajaxPost({% url 'rename_group' %},
+                {
+                    'group_id': {{ group.id }},
+                    'group_name': $('#id_group_name').val()
+                },
+                function (content) {
+                /*on success*/
+                $('#group_name').val($('#id_group_name').val());
+                }
+            )
+        }
+
+        function exclude_student(student_id) {
+            ajaxPost({% url 'exclude_student' %},
+                {
+                    'group_id': {{ group.id }},
+                    'student_id': student_id,
+                },
+                function (content) {
+                /*on success*/
+                }
+            )
+        }
+
+        function assign_leader() {
+            ajaxPost({% url 'assign_leader' %},
+                {
+                    'group_id': {{ group.id }},
+                    'student_id': $( "#id_group_leader" ).val(),
+                },
+                function (content) {
+                /*on success*/
+                $('#group_leader').val($( "#id_group_leader" ).val());
+                }
+            )
+        }
+
+        function distribute_student() {
+            ajaxPost({% url 'distribute_student' %},
+                {
+                    'group_id': {{ group.id }},
+                    'student_id': $( "#id_distr_student" ).val(),
+                },
+                function (content) {
+                /*on success*/
+                }
+            )
+        }
+    </script>
+
+{% endblock %}
