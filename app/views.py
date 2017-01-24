@@ -123,7 +123,7 @@ class DellGroup(View):
         except ObjectDoesNotExist:
             return
 
-        group.dmielete()
+        group.delete()
 
         # exclude students in this group from table 'StudentGroupDistribution'
         distributions = StudentGroupDistribution.objects.filter(
